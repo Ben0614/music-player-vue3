@@ -36,7 +36,7 @@ yarn dev
 
 ## 使用指南
 
-有分成SimplePlayer和MusicPlayer，以下主要介紹MusicPlayer的主要功能與使用。
+有分成SimplePlayer和MusicPlayer、UploadPlayer，以下主要介紹MusicPlayer和UploadPlayer的主要功能與使用。
 
 ### 標註當前歌詞
 
@@ -54,6 +54,10 @@ yarn dev
 
 音樂播放時，背景會出現一片聲音長條圖，這是使用AudioContext獲取的數據進行繪製，以可視化音樂的聲音強度。
 
-### 切換歌曲
+### 切換歌曲 (僅限MusicPlayer)
 
 點選頁面上方的**上一首**和**下一首**可以切換歌曲，切換後audio和聲音長條圖都會變回預設。
+
+### 本地上傳檔案與設置 (僅限UploadPlayer)
+
+UploadPlayer可以直接上傳用戶本地端的Mp3、專輯圖片、背景圖片、Lrc，並且可以設置歌曲名、歌手、當前歌詞顏色、長條圖顏色，讓操作變得更靈活。

@@ -12,6 +12,11 @@ export const routes = [
     path: '/MusicPlayer',
     name: 'musicPlayer',
     component: () => import( '@/views/MusicPlayer.vue'),
+  },
+  {
+    path: '/UploadPlayer',
+    name: 'uploadPlayer',
+    component: () => import( '@/views/UploadPlayer.vue'),
   }
 ];
 

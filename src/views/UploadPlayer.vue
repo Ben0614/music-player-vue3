@@ -391,6 +391,11 @@ const closeUploadDialog = ()=>{
   uploadDialog.value = false
 }
 const UploadSubmit = ()=>{
+  // 如果有更新mp3 就停止播放並讓專輯歸位
+  if (musicMp3.value !== uploadData.musicMp3) {
+    isPlay.value = false
+    resetAlbumCover.value = true
+  }
   title.value = uploadData.title
   singer.value = uploadData.singer
   musicMp3.value = uploadData.musicMp3

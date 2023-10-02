@@ -71,7 +71,8 @@ const isActive = (lrc:ILrc) => {
 }
 // 跳到這一行
 const goToThisRow = (lrc:ILrc) => {
-  if(audioPlayer.value){
+  // 沒有啟用重複播放才可以跳
+  if(audioPlayer.value && !isRepeat.value){
     audioPlayer.value.currentTime = lrc.startTime
     currentTime.value = audioPlayer.value.currentTime
     audioPlayer.value.play()
@@ -91,7 +92,10 @@ const handleRepeat = (type:string, lrc: ILrc) => {
   }
   // 取消重複播放
   if (type === 'cancel') {
-    isRepeat.value = false
+    // 要點同一行的取消按鈕才停止重複播放
+    if (JSON.stringify(repeatLrc) === JSON.stringify(lrc)) {
+      isRepeat.value = false
+    }
   }
 }
 
@@ -396,6 +400,9 @@ const UploadSubmit = ()=>{
   if (musicMp3.value !== uploadData.musicMp3) {
     isPlay.value = false
     resetAlbumCover.value = true
+  }
+  if (lrcs.toString() !== uploadData.lrcs.toString()) {
+    isRepeat.value = false
   }
   title.value = uploadData.title
   singer.value = uploadData.singer

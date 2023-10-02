@@ -300,6 +300,28 @@ onUnmounted(()=>{
   clearInterval(Number(interval.value))
 })
 
+// 每行歌詞添加ref (每行都相同)
+// 如果ref是給單一dom 就用ref<HTMLHeadingElement | null>(null)
+// 如果ref是給多個dom 就用reactive<Array<HTMLHeadingElement | null>>([])
+const lrcRefs = reactive<Array<HTMLHeadingElement | null>>([])
+
+// 跳到現在播放的那一行
+const goToActive = () => {
+  if (lrcRefs.length) {
+    console.log('lrcRefs', lrcRefs);
+    lrcRefs.forEach((lrc, index) => {
+      // 找出class有activeWord的歌詞
+      if (lrc && lrc.classList.contains('activeWord')) {
+        // 獲取它距離頂部的距離
+        const activeLrcOffsetTop = (lrcRefs[index] as HTMLHeadingElement).offsetTop
+
+        console.log('activeLrcOffsetTop', activeLrcOffsetTop);
+        // 跳過去
+        window.scrollTo(0, activeLrcOffsetTop)
+      }
+    })
+  }
+}
 </script>
 
 <script lang="ts">
@@ -309,6 +331,9 @@ export default {
 </script>
 
 <template>
+    <button @click="goToActive" class='jump-btn-style'>
+      Go to active
+    </button>
     <div>
       <button class="change-btn" :disabled="prevBtnDisabled" @click="changeSing('prev')">上一首</button>
       <button class="change-btn ml-3" :disabled="nextBtnDisabled" @click="changeSing('next')">下一首</button>
@@ -341,6 +366,7 @@ export default {
           v-for="(lrc,lrcIndex) in lrcs"
           :key="lrcIndex"
           :class="isActive(lrc) ? 'activeWord' : 'word'"
+          ref="lrcRefs"
           @mouseenter="rowNumber = lrcIndex"
         >
           <!-- 歌詞 -->
@@ -403,7 +429,7 @@ export default {
 }
 
 .rotateAnimation {
-  animation: rotateSingle 3s linear infinite;
+  animation: rotateSingle 7s linear infinite;
 }
 
 .title,

@@ -211,7 +211,7 @@ onUnmounted(()=>{
 const musicMp3Ref = ref<HTMLButtonElement | null>(null)
 const albumCoverRef = ref<HTMLButtonElement | null>(null)
 const bgcRef = ref<HTMLButtonElement | null>(null)
-const lrcsRef = ref<HTMLButtonElement | null>(null)
+const upLoadLrcBtnRef = ref<HTMLButtonElement | null>(null)
 // upload用
 const uploadData: IUploadData = reactive({
   title: '',
@@ -314,6 +314,7 @@ const uploadBgc = (e: Event) => {
     }
   }
 };
+
 // Lrc
 const uploadLrc = (e: Event) => {
   const files = (e.target as HTMLInputElement).files;
@@ -413,6 +414,28 @@ const UploadSubmit = ()=>{
   closeUploadDialog()
 }
 
+// 每行歌詞添加ref (每行都相同)
+// 如果ref是給單一dom 就用ref<HTMLHeadingElement | null>(null)
+// 如果ref是給多個dom 就用reactive<Array<HTMLHeadingElement | null>>([])
+const lrcRefs = reactive<Array<HTMLHeadingElement | null>>([])
+
+// 跳到現在播放的那一行
+const goToActive = ()=>{
+  if(lrcRefs.length){
+    console.log('lrcRefs', lrcRefs);
+    lrcRefs.forEach((lrc,index)=>{
+      // 找出class有activeWord的歌詞
+      if(lrc && lrc.classList.contains('activeWord')){
+        // 獲取它距離頂部的距離
+        const activeLrcOffsetTop = (lrcRefs[index] as HTMLHeadingElement).offsetTop
+
+        console.log('activeLrcOffsetTop', activeLrcOffsetTop);
+        // 跳過去
+        window.scrollTo(0, activeLrcOffsetTop)
+      }
+    })
+  }
+}
 </script>
 
 <script lang="ts">
@@ -422,6 +445,9 @@ export default {
 </script>
 
 <template>
+    <button @click="goToActive" class='jump-btn-style'>
+      Go to active
+    </button>
     <div>
       <button @click="openUploadDialog" class='btn-style mt-3'>
         <span v-if="!hasUpload">上傳</span>
@@ -445,9 +471,9 @@ export default {
           <input ref="bgcRef" type="file" hidden @change="uploadBgc">
         </div>
         <div class="mb-3">
-          <button v-if="lrcsRef" @click="lrcsRef.click()" class="small-btn-style">Lrc</button>
+          <button v-if="upLoadLrcBtnRef" @click="upLoadLrcBtnRef.click()" class="small-btn-style">Lrc</button>
           <span v-if="uploadData.lrcsFile" class="ml-3">{{ uploadData.lrcsFile.name }}</span>
-          <input ref="lrcsRef" type="file" hidden @change="uploadLrc"></div>
+          <input ref="upLoadLrcBtnRef" type="file" hidden @change="uploadLrc"></div>
         <div class="mb-3">
           <label for="title" >歌曲名</label>
           <input v-model="uploadData.title" id="title" type="text" class="ml-3">
@@ -505,6 +531,7 @@ export default {
             v-for="(lrc,lrcIndex) in lrcs"
             :key="lrcIndex"
             :class="isActive(lrc) ? 'activeWord' : 'word'"
+            ref="lrcRefs"
             @mouseenter="rowNumber = lrcIndex"
           >
             <!-- 歌詞 -->
@@ -567,7 +594,6 @@ export default {
 .ml-3{
   margin-left: 12px;
 }
-
 .btn-style{
   background-color:transparent;
   border:1px solid #000;
@@ -593,7 +619,7 @@ export default {
 }
 
 .rotateAnimation {
-  animation: rotateSingle 3s linear infinite;
+  animation: rotateSingle 7s linear infinite;
 }
 
 .title,

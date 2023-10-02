@@ -396,11 +396,13 @@ const closeUploadDialog = ()=>{
   uploadDialog.value = false
 }
 const UploadSubmit = ()=>{
-  // 如果有更新mp3 就停止播放並讓專輯歸位
+  // 如果有更新mp3 就停止播放、讓專輯歸位、停止重複播放
   if (musicMp3.value !== uploadData.musicMp3) {
     isPlay.value = false
+    isRepeat.value = false
     resetAlbumCover.value = true
   }
+  // 如果有更新歌詞 就停止重複播放
   if (lrcs.toString() !== uploadData.lrcs.toString()) {
     isRepeat.value = false
   }

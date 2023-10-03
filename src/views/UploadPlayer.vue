@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {ref,reactive,onMounted, onBeforeUnmount , onUnmounted } from 'vue'
 import { ILrc, IUploadData } from '@/model/uploadPlayer'
+import ActiveBtn from '@/components/ActiveBtn.vue'
 
 const currentTime = ref(0)
 // 是否正在播放 (控制專輯圖片旋轉用)
@@ -403,7 +404,7 @@ const UploadSubmit = ()=>{
     resetAlbumCover.value = true
   }
   // 如果有更新歌詞 就停止重複播放
-  if (lrcs.toString() !== uploadData.lrcs.toString()) {
+  if (JSON.stringify(lrcs) !== JSON.stringify(uploadData.lrcs)) {
     isRepeat.value = false
   }
   title.value = uploadData.title
@@ -428,23 +429,6 @@ const UploadSubmit = ()=>{
 // 如果ref是給多個dom 就用reactive<Array<HTMLHeadingElement | null>>([])
 const lrcRefs = reactive<Array<HTMLHeadingElement | null>>([])
 
-// 跳到現在播放的那一行
-const goToActive = ()=>{
-  if(lrcRefs.length){
-    console.log('lrcRefs', lrcRefs);
-    lrcRefs.forEach((lrc,index)=>{
-      // 找出class有activeWord的歌詞
-      if(lrc && lrc.classList.contains('activeWord')){
-        // 獲取它距離頂部的距離
-        const activeLrcOffsetTop = (lrcRefs[index] as HTMLHeadingElement).offsetTop
-
-        console.log('activeLrcOffsetTop', activeLrcOffsetTop);
-        // 跳過去
-        window.scrollTo(0, activeLrcOffsetTop)
-      }
-    })
-  }
-}
 </script>
 
 <script lang="ts">
@@ -454,9 +438,7 @@ export default {
 </script>
 
 <template>
-    <button @click="goToActive" class='jump-btn-style'>
-      Go to active
-    </button>
+    <ActiveBtn :lrcRefs="lrcRefs"/>
     <div>
       <button @click="openUploadDialog" class='btn-style mt-3'>
         <span v-if="!hasUpload">上傳</span>
@@ -620,6 +602,10 @@ export default {
   margin: 10px auto;
   border-radius: 50%;
   overflow: hidden;
+  @media screen and (max-width: 959px) {
+    height: 230px;
+    width: 230px;
+  }
 }
 
 .single {

@@ -2,6 +2,7 @@
 import {ref,reactive,computed,onMounted, onBeforeUnmount , onUnmounted } from 'vue'
 import { ISings } from '@/model/public'
 import { ILrc } from '@/model/musicPlayer'
+import ActiveBtn from '@/components/ActiveBtn.vue'
 
 import singDataJson from '@/data/おひとりさま天国.json'
 import albumCover from '@/assets/images/おひとりさま天国.jpg'
@@ -311,23 +312,6 @@ onUnmounted(()=>{
 // 如果ref是給多個dom 就用reactive<Array<HTMLHeadingElement | null>>([])
 const lrcRefs = reactive<Array<HTMLHeadingElement | null>>([])
 
-// 跳到現在播放的那一行
-const goToActive = () => {
-  if (lrcRefs.length) {
-    console.log('lrcRefs', lrcRefs);
-    lrcRefs.forEach((lrc, index) => {
-      // 找出class有activeWord的歌詞
-      if (lrc && lrc.classList.contains('activeWord')) {
-        // 獲取它距離頂部的距離
-        const activeLrcOffsetTop = (lrcRefs[index] as HTMLHeadingElement).offsetTop
-
-        console.log('activeLrcOffsetTop', activeLrcOffsetTop);
-        // 跳過去
-        window.scrollTo(0, activeLrcOffsetTop)
-      }
-    })
-  }
-}
 </script>
 
 <script lang="ts">
@@ -337,9 +321,7 @@ export default {
 </script>
 
 <template>
-    <button @click="goToActive" class='jump-btn-style'>
-      Go to active
-    </button>
+    <ActiveBtn :lrcRefs="lrcRefs" />
     <div>
       <button class="change-btn" :disabled="prevBtnDisabled" @click="changeSing('prev')">上一首</button>
       <button class="change-btn ml-3" :disabled="nextBtnDisabled" @click="changeSing('next')">下一首</button>
@@ -427,6 +409,10 @@ export default {
   margin: 10px auto;
   border-radius: 50%;
   overflow: hidden;
+  @media screen and (max-width: 959px) {
+    height: 230px;
+    width: 230px;
+  }
 }
 
 .single {

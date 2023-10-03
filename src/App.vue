@@ -35,4 +35,10 @@
 .uploadPlayer {
   margin-left: 60px;
 }
+
+.uploadPlayer {
+  @media screen and (max-width: 959px) {
+    margin-left: 0px;
+  }
+}
 </style>

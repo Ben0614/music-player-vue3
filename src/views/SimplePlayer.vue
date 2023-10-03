@@ -2,6 +2,7 @@
 import { ref, reactive, computed, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
 import { ISingData } from '@/model/public'
 import { ILrc } from '@/model/simplePlayer'
+import ActiveBtn from '@/components/ActiveBtn.vue'
 import singDataJson from '@/data/青いベンチ.json'
 import albumCover from '@/assets/images/青いベンチ.jpg'
 import bgc from '@/assets/images/青いベンチbgc.jpg'
@@ -220,23 +221,6 @@ onUnmounted(()=>{
 // 如果ref是給多個dom 就用reactive<Array<HTMLHeadingElement | null>>([])
 const lrcRefs = reactive<Array<HTMLHeadingElement | null>>([])
 
-// 跳到現在播放的那一行
-const goToActive = () => {
-  if (lrcRefs.length) {
-    console.log('lrcRefs', lrcRefs);
-    lrcRefs.forEach((lrc, index) => {
-      // 找出class有activeWord的歌詞
-      if (lrc && lrc.classList.contains('activeWord')) {
-        // 獲取它距離頂部的距離
-        const activeLrcOffsetTop = (lrcRefs[index] as HTMLHeadingElement).offsetTop
-
-        console.log('activeLrcOffsetTop', activeLrcOffsetTop);
-        // 跳過去
-        window.scrollTo(0, activeLrcOffsetTop)
-      }
-    })
-  }
-}
 </script>
 <script lang="ts">
 export default {
@@ -245,9 +229,7 @@ export default {
 </script>
 
 <template>
-    <button @click="goToActive" class='jump-btn-style'>
-      Go to active
-    </button>
+    <ActiveBtn :lrcRefs="lrcRefs"/>
     <div>
       <h2 class="title">{{`${singData.title} - ${singData.singer}`}}</h2>
       <!-- 專輯 -->
@@ -309,6 +291,10 @@ export default {
   margin: 10px auto;
   border-radius: 50%;
   overflow: hidden;
+  @media screen and (max-width: 959px) {
+    height: 230px;
+    width: 230px;
+  }
 }
 
 .single {

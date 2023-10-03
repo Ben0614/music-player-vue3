@@ -56,16 +56,6 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-.jump-btn-style {
-  position: fixed;
-  top:50%;
-  right:10px;
-  transform: translate(0,-50%);
-  background-color:transparent;
-  border:1px solid #000;
-  border-radius: 50% 0 50% 0;
-  font-weight: 700;
-}
 
 .card {
   padding: 2em;
